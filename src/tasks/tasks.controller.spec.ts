@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TasksController } from './tasks.controller';
-import spyOn = jest.spyOn;
 import { TasksService } from './tasks.service';
+import { Task } from './task.model';
 
 describe('TasksController', () => {
   let controller: TasksController;
@@ -25,5 +25,16 @@ describe('TasksController', () => {
     const spyGetAllTasks = jest.spyOn(service, 'getAllTasks');
     controller.getAllTasks();
     expect(spyGetAllTasks).toBeCalledTimes(1);
+  });
+
+  it('should call service createTask with correct params', () => {
+    const spyCreateTask = jest.spyOn(service, 'createTask');
+    const task: Task = {
+      title: 'any_title',
+      description: 'any_description',
+    };
+    controller.createTask(task);
+    expect(spyCreateTask).toBeCalledWith(task);
+    expect(spyCreateTask).toBeCalledTimes(1);
   });
 });
