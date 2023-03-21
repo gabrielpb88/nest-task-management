@@ -2,6 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TasksService } from './tasks.service';
 import { NotFoundException } from '@nestjs/common';
 import { Task, TaskStatus } from './task.model';
+import { CreateTaskDto } from './dto/create-task.dto';
+import * as uuid from 'uuid';
+jest.mock('uuid');
 
 describe('TasksService', () => {
   let service: TasksService;
@@ -37,5 +40,15 @@ describe('TasksService', () => {
     service.removeTask('valid_id');
     expect(spyGetTaskById).toBeCalledTimes(1);
     expect(spyGetTaskById).toBeCalledWith(task.id);
+  });
+
+  it('should create task when correct value is passed', () => {
+    const task: CreateTaskDto = {
+      title: 'valid_task',
+      description: 'valid_description',
+    };
+    jest.spyOn(uuid, 'v4').mockReturnValueOnce('any_id');
+    const taskCreated = service.createTask(task);
+    expect(taskCreated.id).toBe('any_id');
   });
 });
