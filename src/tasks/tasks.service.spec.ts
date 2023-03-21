@@ -4,6 +4,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Task, TaskStatus } from './task.model';
 import { CreateTaskDto } from './dto/create-task.dto';
 import * as uuid from 'uuid';
+
 jest.mock('uuid');
 
 describe('TasksService', () => {
@@ -50,5 +51,16 @@ describe('TasksService', () => {
     jest.spyOn(uuid, 'v4').mockReturnValueOnce('any_id');
     const taskCreated = service.createTask(task);
     expect(taskCreated.id).toBe('any_id');
+  });
+
+  it('should updated task when correct value is passed', () => {
+    jest.spyOn(service, 'getTaskById').mockReturnValueOnce({
+      id: 'valid_id',
+      title: 'valid_title',
+      description: 'valid_description',
+      status: TaskStatus.OPEN,
+    });
+    const updateTask = service.updateTask('valid_id', TaskStatus.DONE);
+    expect(updateTask.status).toBe(TaskStatus.DONE);
   });
 });

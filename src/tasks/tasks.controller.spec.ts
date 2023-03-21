@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { Task } from './task.model';
+import { Task, TaskStatus } from './task.model';
 
 describe('TasksController', () => {
   let controller: TasksController;
@@ -54,5 +54,15 @@ describe('TasksController', () => {
     const id = 'valid_id';
     controller.removeTask(id);
     expect(spyRemoveTask).toBeCalledWith(id);
+  });
+
+  it('should call service updateTask with correct params', () => {
+    const spyUpdateTask = jest
+      .spyOn(service, 'updateTask')
+      .mockImplementationOnce(() => null);
+    const id = 'valid_id';
+    const status = TaskStatus.DONE;
+    controller.updateTask(id, status);
+    expect(spyUpdateTask).toBeCalledWith(id, status);
   });
 });
