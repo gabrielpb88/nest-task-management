@@ -46,4 +46,13 @@ describe('TasksController', () => {
     expect(spyCreateTask).toBeCalledWith(task);
     expect(spyCreateTask).toBeCalledTimes(1);
   });
+
+  it('should call service removeTask with correct params', () => {
+    const spyRemoveTask = jest
+      .spyOn(service, 'removeTask')
+      .mockImplementationOnce(() => null);
+    const id = 'valid_id';
+    controller.removeTask(id);
+    expect(spyRemoveTask).toBeCalledWith(id);
+  });
 });
