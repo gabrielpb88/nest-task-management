@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
+import { Task } from './task.model';
 
 describe('TasksController', () => {
   let controller: TasksController;
@@ -29,6 +30,7 @@ describe('TasksController', () => {
 
   it('should call service getTaskById with correct values', () => {
     const spy = jest.spyOn(service, 'getTaskById');
+    spy.mockImplementationOnce((id: string) => ({} as Task));
     const id = 'any_id';
     controller.getTaskById(id);
     expect(spy).toBeCalledWith(id);
