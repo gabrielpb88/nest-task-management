@@ -2,8 +2,8 @@
 version: '3.1'
 
 services:
-
   db:
+    container_name: db_task
     image: postgres
     restart: always
     environment:
