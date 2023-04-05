@@ -3,6 +3,7 @@ import { Task } from './task.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { User } from '../auth/user.entity';
 
 @Injectable()
 export class TaskRepository extends Repository<Task> {
@@ -13,11 +14,7 @@ export class TaskRepository extends Repository<Task> {
     super(repository.target, repository.manager, repository.queryRunner);
   }
 
-  async findById(id: number): Promise<Task> {
-    return this.findOneBy({ id });
-  }
-
-  async getTasks(filter: GetTasksFilterDto) {
+  async getTasks(filter: GetTasksFilterDto, user: User) {
     const { status, search } = filter;
     const query = this.createQueryBuilder('task');
 
@@ -31,6 +28,7 @@ export class TaskRepository extends Repository<Task> {
         { search: `%${search}%` },
       );
     }
+    query.andWhere('task.userId = :userId', { userId: user.id });
 
     return query.getMany();
   }

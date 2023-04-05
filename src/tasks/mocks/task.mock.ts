@@ -8,6 +8,7 @@ export const taskMocked: Task = {
   description: 'any_description',
   title: 'any_title',
   user: new User(),
+  userId: 1,
   save: jest.fn(),
   hasId: jest.fn(),
   recover: jest.fn(),
