@@ -6,21 +6,22 @@ import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
-
-const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
+import { jwtConstants } from './constants';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({
-      secret: 'jwtSecret',
+      secret: jwtConstants.secret,
       signOptions: {
-        expiresIn: ONE_YEAR_IN_SECONDS,
+        expiresIn: jwtConstants.ONE_YEAR_IN_SECONDS,
       },
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, UserRepository],
+  providers: [AuthService, UserRepository, JwtStrategy],
+  exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}
