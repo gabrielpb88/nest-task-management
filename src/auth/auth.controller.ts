@@ -10,8 +10,15 @@ export class AuthController {
     private readonly service: AuthService,
   ) {}
 
-  @Post('/signup')
+  @Post('signup')
   async signUp(@Body() authCredentialsDto: AuthCredentialsDto): Promise<User> {
     return this.service.signUp(authCredentialsDto);
+  }
+
+  @Post('signin')
+  async signIn(
+    @Body() authCredentialsDto: AuthCredentialsDto,
+  ): Promise<boolean> {
+    return this.service.signin(authCredentialsDto);
   }
 }

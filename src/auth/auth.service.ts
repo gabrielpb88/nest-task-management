@@ -1,4 +1,9 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { UserRepository } from './user.repository';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { User } from './user.entity';
@@ -23,6 +28,21 @@ export class AuthService {
     user.password = await this.hashPassword(password, user.salt);
 
     return this.repository.signUp(user);
+  }
+
+  async signin(authCredentialsDto: AuthCredentialsDto): Promise<boolean> {
+    const { username, password } = authCredentialsDto;
+    const user = await this.repository.findOneBy({ username });
+
+    const salt = user.salt;
+    const isUserAndPasswordCorrect =
+      user && user.password === (await this.hashPassword(password, salt));
+
+    if (!isUserAndPasswordCorrect) {
+      throw new HttpException('Authentication Error', 401);
+    }
+
+    return isUserAndPasswordCorrect;
   }
 
   private async hashPassword(password, hash): Promise<string> {
